@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Replaced bincode with postcard for serialization (bincode is unmaintained)
-- Updated serialization to use actively maintained library
+- Replaced postcard with ciborium (CBOR) for serialization
+- Ciborium has no unmaintained dependencies
 
 ### Added
 - Password change command (`change-password`)

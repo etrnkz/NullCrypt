@@ -75,8 +75,9 @@ impl VaultContainer {
 
         let key = derive_key(password, &salt, &data.metadata.kdf_params)?;
 
-        let plaintext =
-            postcard::to_allocvec(data).map_err(|e| VaultError::Serialization(e.to_string()))?;
+        let mut plaintext = Vec::new();
+        ciborium::into_writer(data, &mut plaintext)
+            .map_err(|e| VaultError::Serialization(e.to_string()))?;
 
         let ciphertext = encrypt(&key, &nonce, &plaintext)?;
 
@@ -156,7 +157,7 @@ impl VaultContainer {
         let key = derive_key(password, &self.salt, &kdf_params)?;
         let plaintext = decrypt(&key, &self.nonce, &self.ciphertext)?;
 
-        let data: VaultData = postcard::from_bytes(&plaintext)
+        let data: VaultData = ciborium::from_reader(&plaintext[..])
             .map_err(|e| VaultError::Serialization(e.to_string()))?;
 
         Ok(data)
