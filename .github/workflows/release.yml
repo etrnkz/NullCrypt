@@ -46,16 +46,16 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact_name: vault-cli
-            asset_name: vault-cli-linux-amd64
+            artifact_name: nullcrypt
+            asset_name: nullcrypt-linux-amd64
           - os: macos-latest
             target: x86_64-apple-darwin
-            artifact_name: vault-cli
-            asset_name: vault-cli-macos-amd64
+            artifact_name: nullcrypt
+            asset_name: nullcrypt-macos-amd64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact_name: vault-cli.exe
-            asset_name: vault-cli-windows-amd64.exe
+            artifact_name: nullcrypt.exe
+            asset_name: nullcrypt-windows-amd64.exe
     steps:
       - uses: actions/checkout@v4
       

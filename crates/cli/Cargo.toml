@@ -1,11 +1,11 @@
 [package]
-name = "vault-cli"
+name = "nullcrypt"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [[bin]]
-name = "vault-cli"
+name = "nullcrypt"
 path = "src/main.rs"
 
 [dependencies]

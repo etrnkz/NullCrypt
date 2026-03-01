@@ -92,9 +92,9 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: vault-cli-${{ matrix.target }}
+          name: nullcrypt-${{ matrix.target }}
           path: |
-            target/${{ matrix.target }}/release/vault-cli*
+            target/${{ matrix.target }}/release/nullcrypt*
             !target/${{ matrix.target }}/release/*.d
 
   coverage:

@@ -44,14 +44,14 @@ echo ""
 
 # Check binary
 echo "✓ Verifying binary..."
-./target/release/vault-cli --version || ./target/release/vault-cli.exe --version
+./target/release/nullcrypt --version || ./target/release/nullcrypt.exe --version
 echo ""
 
 echo "✅ All checks passed!"
 echo ""
 echo "📦 Release binary location:"
-if [ -f "./target/release/vault-cli" ]; then
-    echo "   ./target/release/vault-cli"
-elif [ -f "./target/release/vault-cli.exe" ]; then
-    echo "   ./target/release/vault-cli.exe"
+if [ -f "./target/release/nullcrypt" ]; then
+    echo "   ./target/release/nullcrypt"
+elif [ -f "./target/release/nullcrypt.exe" ]; then
+    echo "   ./target/release/nullcrypt.exe"
 fi

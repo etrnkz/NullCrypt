@@ -43,14 +43,14 @@ Write-Host ""
 
 # Check binary
 Write-Host "✓ Verifying binary..." -ForegroundColor Green
-if (Test-Path "./target/release/vault-cli.exe") {
-    & "./target/release/vault-cli.exe" --help | Select-Object -First 1
+if (Test-Path "./target/release/nullcrypt.exe") {
+    & "./target/release/nullcrypt.exe" --help | Select-Object -First 1
 }
 Write-Host ""
 
 Write-Host "✅ All checks passed!" -ForegroundColor Green
 Write-Host ""
 Write-Host "📦 Release binary location:" -ForegroundColor Cyan
-if (Test-Path "./target/release/vault-cli.exe") {
-    Write-Host "   ./target/release/vault-cli.exe"
+if (Test-Path "./target/release/nullcrypt.exe") {
+    Write-Host "   ./target/release/nullcrypt.exe"
 }

@@ -25,43 +25,43 @@ A production-grade, cross-platform encrypted vault system for USB drives and SD 
 - Structured logging without secret leakage
 - Comprehensive threat modeling
 
-## 📦 Installation
+### Installation
 
-### From Source
+#### From Source
 
 ```bash
-git clone https://github.com/etrnkz/secure-vault.git
-cd secure-vault
+git clone https://github.com/etrnkz/NullCrypt.git
+cd NullCrypt
 cargo install --path crates/cli
 ```
 
-### From Crates.io (Coming Soon)
+#### From Crates.io (Coming Soon)
 
 ```bash
-cargo install vault-cli
+cargo install nullcrypt
 ```
 
-### Pre-built Binaries
+#### Pre-built Binaries
 
-Download from [GitHub Releases](https://github.com/etrnkz/secure-vault/releases)
+Download from [GitHub Releases](https://github.com/etrnkz/NullCrypt/releases)
 
-## 🚀 Quick Start
+### Quick Start
 
 ```bash
 # Create a new vault
-vault-cli create /media/usb/my-vault.vault
+nullcrypt create /media/usb/my-vault.vault
 
 # Add files to vault
-vault-cli pack /media/usb/my-vault.vault file1.txt file2.pdf
+nullcrypt pack /media/usb/my-vault.vault file1.txt file2.pdf
 
 # Extract files from vault
-vault-cli unpack /media/usb/my-vault.vault --output ./extracted/
+nullcrypt unpack /media/usb/my-vault.vault --output ./extracted/
 
 # List vault contents
-vault-cli list /media/usb/my-vault.vault
+nullcrypt list /media/usb/my-vault.vault
 
 # Change vault password
-vault-cli change-password /media/usb/my-vault.vault
+nullcrypt change-password /media/usb/my-vault.vault
 ```
 
 ## 🛠️ Development
@@ -80,20 +80,20 @@ cargo build --release           # Release build
 
 See [Building from Source](docs/BUILDING.md) for more details.
 
-## 📚 Documentation
+### Documentation
 
 - [Building from Source](docs/BUILDING.md) - Build instructions
 - [Contributing](CONTRIBUTING.md) - How to contribute
 
-## 🤝 Contributing
+### Contributing
 
 Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md).
 
-## 🔒 Security
+### Security
 
 This project uses audited cryptographic libraries (aes-gcm, argon2) for all cryptographic operations. Always use strong passwords and keep backups of important data.
 
-## 📄 License
+### License
 
 Licensed under either of:
 
@@ -102,13 +102,13 @@ Licensed under either of:
 
 at your option.
 
-## 🙏 Acknowledgments
+### Acknowledgments
 
 Built with:
 - [aes-gcm](https://github.com/RustCrypto/AEADs) - AES-256-GCM implementation
 - [argon2](https://github.com/RustCrypto/password-hashes) - Argon2id key derivation
 - [zeroize](https://github.com/RustCrypto/utils) - Secure memory zeroization
 
-## ⚠️ Disclaimer
+### Disclaimer
 
 This software is provided "as is" without warranty. Always keep backups of important data.

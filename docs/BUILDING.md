@@ -30,7 +30,7 @@ cargo install --path crates/cli
 cargo build --workspace
 
 # Run with logging
-RUST_LOG=debug cargo run --bin vault-cli -- --help
+RUST_LOG=debug cargo run --bin nullcrypt -- --help
 ```
 
 ## Release Build
@@ -40,7 +40,7 @@ RUST_LOG=debug cargo run --bin vault-cli -- --help
 cargo build --release --workspace
 
 # Binary location
-./target/release/vault-cli
+./target/release/nullcrypt
 ```
 
 ## Cross-Compilation

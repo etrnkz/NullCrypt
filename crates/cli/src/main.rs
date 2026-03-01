@@ -7,7 +7,7 @@ use tracing_subscriber::EnvFilter;
 use vault_engine::Vault;
 
 #[derive(Parser)]
-#[command(name = "vault-cli")]
+#[command(name = "nullcrypt")]
 #[command(about = "Secure encrypted vault for removable media", long_about = None)]
 struct Cli {
     #[command(subcommand)]
