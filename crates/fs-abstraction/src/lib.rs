@@ -25,10 +25,7 @@ pub struct MountOptions {
     pub allow_other: bool,
 }
 
-#[cfg(all(
-    any(target_os = "linux", target_os = "macos"),
-    feature = "fuse"
-))]
+#[cfg(all(any(target_os = "linux", target_os = "macos"), feature = "fuse"))]
 pub mod fuse {
     use super::*;
 
@@ -43,10 +40,7 @@ pub mod fuse {
     }
 }
 
-#[cfg(not(all(
-    any(target_os = "linux", target_os = "macos"),
-    feature = "fuse"
-)))]
+#[cfg(not(all(any(target_os = "linux", target_os = "macos"), feature = "fuse")))]
 pub mod fuse {
     use super::*;
 
