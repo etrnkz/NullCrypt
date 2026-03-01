@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Password change command (`change-password`)
+- Test coverage for password change functionality
+
+## [0.1.0] - 2024
+
+### Added
 - Initial release
 - AES-256-GCM authenticated encryption
 - Argon2id key derivation

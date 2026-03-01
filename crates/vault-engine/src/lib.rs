@@ -231,6 +231,14 @@ impl Vault {
         info!("Removed file from vault");
         Ok(())
     }
+
+    /// Change the vault password
+    /// This re-encrypts the vault with a new password
+    pub fn change_password(&mut self, new_password: Vec<u8>) {
+        self.password.zeroize();
+        self.password = new_password;
+        info!("Vault password changed");
+    }
 }
 
 impl Drop for Vault {
@@ -271,5 +279,31 @@ mod tests {
 
         let result = Vault::open(temp_file.path(), b"wrong_password".to_vec());
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_password_change() {
+        let temp_file = NamedTempFile::new().unwrap();
+        let old_password = b"old_password".to_vec();
+        let new_password = b"new_password".to_vec();
+
+        // Create vault with old password
+        let mut vault = Vault::create(old_password.clone());
+        vault.add_file("test.txt".to_string(), b"Secret data".to_vec());
+        vault.save(temp_file.path()).unwrap();
+
+        // Open and change password
+        let mut vault = Vault::open(temp_file.path(), old_password).unwrap();
+        vault.change_password(new_password.clone());
+        vault.save(temp_file.path()).unwrap();
+
+        // Verify old password no longer works
+        let result = Vault::open(temp_file.path(), b"old_password".to_vec());
+        assert!(result.is_err());
+
+        // Verify new password works and data is intact
+        let vault = Vault::open(temp_file.path(), new_password).unwrap();
+        let file = vault.get_file("test.txt").unwrap();
+        assert_eq!(file.data, b"Secret data");
     }
 }

@@ -46,6 +46,12 @@ enum Commands {
         #[arg(value_name = "VAULT_PATH")]
         vault_path: PathBuf,
     },
+    /// Change vault password
+    ChangePassword {
+        /// Path to vault file
+        #[arg(value_name = "VAULT_PATH")]
+        vault_path: PathBuf,
+    },
 }
 
 fn read_password(prompt: &str) -> Result<Vec<u8>> {
@@ -126,6 +132,27 @@ fn main() -> Result<()> {
             for file in vault.list_files() {
                 println!("{:<40} {:>12}", file.name, format_size(file.size));
             }
+        }
+
+        Commands::ChangePassword { vault_path } => {
+            info!("Changing vault password");
+            let old_password = read_password("Enter current password: ")?;
+            let mut vault = Vault::open(&vault_path, old_password)?;
+
+            let new_password = read_password("Enter new password: ")?;
+            let confirm = read_password("Confirm new password: ")?;
+
+            if new_password != confirm {
+                anyhow::bail!("Passwords do not match");
+            }
+
+            if new_password.is_empty() {
+                anyhow::bail!("Password cannot be empty");
+            }
+
+            vault.change_password(new_password);
+            vault.save(&vault_path)?;
+            println!("✓ Password changed successfully");
         }
     }
 

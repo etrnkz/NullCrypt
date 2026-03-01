@@ -6,18 +6,18 @@
 
 A production-grade, cross-platform encrypted vault system for USB drives and SD cards built with Rust.
 
-## ✨ Features
+###  Features
 
-- 🔒 **Military-grade encryption**: AES-256-GCM authenticated encryption
-- 🔑 **Secure key derivation**: Argon2id with unique salts per vault
-- 🧹 **Memory safety**: Automatic zeroization of secrets
-- 🛡️ **Side-channel protection**: Constant-time operations
-- 🌍 **Cross-platform**: Linux, macOS, Windows support
-- ✅ **Audited primitives**: Uses well-vetted cryptographic libraries
-- 📦 **Zero dependencies**: No OpenSSL or system crypto libraries required
-- 🚀 **Fast**: Optimized release builds with LTO
+-  **Military-grade encryption**: AES-256-GCM authenticated encryption
+-  **Secure key derivation**: Argon2id with unique salts per vault
+-  **Memory safety**: Automatic zeroization of secrets
+-  **Side-channel protection**: Constant-time operations
+-  **Cross-platform**: Linux, macOS, Windows support
+-  **Audited primitives**: Uses well-vetted cryptographic libraries
+-  **Zero dependencies**: No OpenSSL or system crypto libraries required
+-  **Fast**: Optimized release builds with LTO
 
-## Security Architecture
+### Security Architecture
 
 - No plaintext ever written to disk
 - Versioned binary container format with integrity validation
@@ -59,6 +59,9 @@ vault-cli unpack /media/usb/my-vault.vault --output ./extracted/
 
 # List vault contents
 vault-cli list /media/usb/my-vault.vault
+
+# Change vault password
+vault-cli change-password /media/usb/my-vault.vault
 ```
 
 ## 🛠️ Development
