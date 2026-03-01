@@ -1,4 +1,4 @@
-# 🔐 Secure Vault - Encrypted Container for Removable Media
+## Secure Vault - Encrypted Container for Removable Media
 
 [![CI](https://github.com/etrnkz/secure-vault/workflows/CI/badge.svg)](https://github.com/etrnkz/secure-vault/actions)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE)
@@ -64,7 +64,7 @@ nullcrypt list /media/usb/my-vault.vault
 nullcrypt change-password /media/usb/my-vault.vault
 ```
 
-## 🛠️ Development
+### Development
 
 ```bash
 # Run all checks
