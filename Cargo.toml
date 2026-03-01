@@ -27,7 +27,7 @@ serde = { version = "1.0", features = ["derive"] }
 ciborium = "0.2"
 
 # Error handling
-thiserror = "1.0"
+thiserror = "2.0"
 anyhow = "1.0"
 
 # Logging
