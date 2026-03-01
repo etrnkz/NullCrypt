@@ -8,7 +8,6 @@ use aes_gcm::{
     Aes256Gcm, Nonce,
 };
 use argon2::{Argon2, ParamsBuilder, Version};
-use bincode::{Decode, Encode};
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use subtle::ConstantTimeEq;
@@ -50,7 +49,7 @@ impl SecureKey {
 }
 
 /// Argon2id parameters for key derivation
-#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KdfParams {
     pub memory_cost_kb: u32,
     pub time_cost: u32,

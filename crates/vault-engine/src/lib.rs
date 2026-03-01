@@ -1,6 +1,5 @@
 //! Vault engine for managing encrypted containers
 
-use bincode::{Decode, Encode};
 use crypto_core::{
     decrypt, derive_key, encrypt, generate_nonce, generate_salt, CryptoError, KdfParams,
     NONCE_SIZE, SALT_SIZE,
@@ -33,21 +32,21 @@ pub enum VaultError {
     FileNotFound(String),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VaultMetadata {
     pub version: u32,
     pub kdf_params: KdfParams,
     pub created_at: u64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Encode, Decode)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FileEntry {
     pub name: String,
     pub size: u64,
     pub data: Vec<u8>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Encode, Decode)]
+#[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct VaultData {
     metadata: VaultMetadata,
     files: HashMap<String, FileEntry>,
@@ -76,7 +75,7 @@ impl VaultContainer {
 
         let key = derive_key(password, &salt, &data.metadata.kdf_params)?;
 
-        let plaintext = bincode::encode_to_vec(data, bincode::config::standard())
+        let plaintext = postcard::to_allocvec(data)
             .map_err(|e| VaultError::Serialization(e.to_string()))?;
 
         let ciphertext = encrypt(&key, &nonce, &plaintext)?;
@@ -157,9 +156,8 @@ impl VaultContainer {
         let key = derive_key(password, &self.salt, &kdf_params)?;
         let plaintext = decrypt(&key, &self.nonce, &self.ciphertext)?;
 
-        let (data, _): (VaultData, usize) =
-            bincode::decode_from_slice(&plaintext, bincode::config::standard())
-                .map_err(|e| VaultError::Serialization(e.to_string()))?;
+        let data: VaultData = postcard::from_bytes(&plaintext)
+            .map_err(|e| VaultError::Serialization(e.to_string()))?;
 
         Ok(data)
     }

@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Upgraded bincode from 1.3.3 to 2.0.0-rc.3 (fixes unmaintained warning)
-- Updated serialization code to use bincode 2.0 API
+- Replaced bincode with postcard for serialization (bincode is unmaintained)
+- Updated serialization to use actively maintained library
 
 ### Added
 - Password change command (`change-password`)
