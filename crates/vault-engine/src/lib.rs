@@ -75,8 +75,8 @@ impl VaultContainer {
 
         let key = derive_key(password, &salt, &data.metadata.kdf_params)?;
 
-        let plaintext = postcard::to_allocvec(data)
-            .map_err(|e| VaultError::Serialization(e.to_string()))?;
+        let plaintext =
+            postcard::to_allocvec(data).map_err(|e| VaultError::Serialization(e.to_string()))?;
 
         let ciphertext = encrypt(&key, &nonce, &plaintext)?;
 
