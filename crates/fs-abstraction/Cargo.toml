@@ -13,4 +13,4 @@ default = []
 fuse = ["dep:fuser"]
 
 [target.'cfg(any(target_os = "linux", target_os = "macos"))'.dependencies]
-fuser = { version = "0.14", optional = true }
+fuser = { version = "0.17", optional = true }
