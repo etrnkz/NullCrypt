@@ -2,6 +2,9 @@
 //!
 //! Provides FUSE support on Linux/macOS and Dokan support on Windows
 //! for mounting encrypted vaults as virtual filesystems.
+//!
+//! Note: FUSE/Dokan support is currently a placeholder and not yet implemented.
+//! Enable the "fuse" feature to include FUSE dependencies.
 
 use std::path::PathBuf;
 use thiserror::Error;
@@ -22,13 +25,32 @@ pub struct MountOptions {
     pub allow_other: bool,
 }
 
-#[cfg(any(target_os = "linux", target_os = "macos"))]
+#[cfg(all(
+    any(target_os = "linux", target_os = "macos"),
+    feature = "fuse"
+))]
 pub mod fuse {
     use super::*;
 
     pub fn mount(_options: MountOptions) -> Result<(), FsError> {
         // FUSE implementation would go here
         // This is a placeholder for the full implementation
+        Err(FsError::NotSupported)
+    }
+
+    pub fn unmount(_mount_point: &PathBuf) -> Result<(), FsError> {
+        Err(FsError::NotSupported)
+    }
+}
+
+#[cfg(not(all(
+    any(target_os = "linux", target_os = "macos"),
+    feature = "fuse"
+)))]
+pub mod fuse {
+    use super::*;
+
+    pub fn mount(_options: MountOptions) -> Result<(), FsError> {
         Err(FsError::NotSupported)
     }
 
