@@ -7,6 +7,9 @@ vulnerability = "deny"
 unmaintained = "warn"
 yanked = "deny"
 notice = "warn"
+ignore = [
+    "RUSTSEC-2021-0154", # fuser - optional dependency, not used yet
+]
 
 [licenses]
 unlicensed = "deny"
