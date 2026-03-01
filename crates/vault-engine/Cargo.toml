@@ -1,0 +1,16 @@
+[package]
+name = "vault-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+crypto-core = { path = "../crypto-core" }
+serde.workspace = true
+bincode.workspace = true
+thiserror.workspace = true
+zeroize.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile = "3.8"

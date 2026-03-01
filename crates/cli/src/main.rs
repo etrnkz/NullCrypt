@@ -1,0 +1,146 @@
+use anyhow::{Context, Result};
+use clap::{Parser, Subcommand};
+use std::fs;
+use std::path::PathBuf;
+use tracing::info;
+use tracing_subscriber::EnvFilter;
+use vault_engine::Vault;
+
+#[derive(Parser)]
+#[command(name = "vault-cli")]
+#[command(about = "Secure encrypted vault for removable media", long_about = None)]
+struct Cli {
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Create a new vault
+    Create {
+        /// Path to vault file
+        #[arg(value_name = "VAULT_PATH")]
+        path: PathBuf,
+    },
+    /// Add files to vault
+    Pack {
+        /// Path to vault file
+        #[arg(value_name = "VAULT_PATH")]
+        vault_path: PathBuf,
+        /// Files to add
+        #[arg(value_name = "FILES")]
+        files: Vec<PathBuf>,
+    },
+    /// Extract files from vault
+    Unpack {
+        /// Path to vault file
+        #[arg(value_name = "VAULT_PATH")]
+        vault_path: PathBuf,
+        /// Output directory
+        #[arg(short, long, value_name = "DIR")]
+        output: PathBuf,
+    },
+    /// List vault contents
+    List {
+        /// Path to vault file
+        #[arg(value_name = "VAULT_PATH")]
+        vault_path: PathBuf,
+    },
+}
+
+fn read_password(prompt: &str) -> Result<Vec<u8>> {
+    let password = rpassword::prompt_password(prompt).context("Failed to read password")?;
+    Ok(password.into_bytes())
+}
+
+fn main() -> Result<()> {
+    tracing_subscriber::fmt()
+        .with_env_filter(EnvFilter::from_default_env().add_directive(tracing::Level::INFO.into()))
+        .init();
+
+    let cli = Cli::parse();
+
+    match cli.command {
+        Commands::Create { path } => {
+            info!("Creating new vault at {:?}", path);
+            let password = read_password("Enter password: ")?;
+            let confirm = read_password("Confirm password: ")?;
+
+            if password != confirm {
+                anyhow::bail!("Passwords do not match");
+            }
+
+            let vault = Vault::create(password);
+            vault.save(&path)?;
+            println!("✓ Vault created successfully");
+        }
+
+        Commands::Pack { vault_path, files } => {
+            info!("Adding files to vault");
+            let password = read_password("Enter vault password: ")?;
+            let mut vault = Vault::open(&vault_path, password)?;
+
+            for file_path in files {
+                let filename = file_path
+                    .file_name()
+                    .context("Invalid filename")?
+                    .to_string_lossy()
+                    .to_string();
+
+                let data = fs::read(&file_path)
+                    .with_context(|| format!("Failed to read {:?}", file_path))?;
+
+                vault.add_file(filename.clone(), data);
+                println!("✓ Added: {}", filename);
+            }
+
+            vault.save(&vault_path)?;
+            println!("✓ Vault updated successfully");
+        }
+
+        Commands::Unpack { vault_path, output } => {
+            info!("Extracting files from vault");
+            let password = read_password("Enter vault password: ")?;
+            let vault = Vault::open(&vault_path, password)?;
+
+            fs::create_dir_all(&output)?;
+
+            for file in vault.list_files() {
+                let out_path = output.join(&file.name);
+                fs::write(&out_path, &file.data)
+                    .with_context(|| format!("Failed to write {:?}", out_path))?;
+                println!("✓ Extracted: {}", file.name);
+            }
+
+            println!("✓ All files extracted to {:?}", output);
+        }
+
+        Commands::List { vault_path } => {
+            let password = read_password("Enter vault password: ")?;
+            let vault = Vault::open(&vault_path, password)?;
+
+            println!("\nVault contents:");
+            println!("{:<40} {:>12}", "Name", "Size");
+            println!("{}", "-".repeat(54));
+
+            for file in vault.list_files() {
+                println!("{:<40} {:>12}", file.name, format_size(file.size));
+            }
+        }
+    }
+
+    Ok(())
+}
+
+fn format_size(bytes: u64) -> String {
+    const UNITS: &[&str] = &["B", "KB", "MB", "GB"];
+    let mut size = bytes as f64;
+    let mut unit_idx = 0;
+
+    while size >= 1024.0 && unit_idx < UNITS.len() - 1 {
+        size /= 1024.0;
+        unit_idx += 1;
+    }
+
+    format!("{:.2} {}", size, UNITS[unit_idx])
+}

@@ -1,0 +1,31 @@
+# Git attributes for Secure Vault
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Rust source files
+*.rs text eol=lf
+*.toml text eol=lf
+
+# Documentation
+*.md text eol=lf
+
+# Scripts
+*.sh text eol=lf
+*.ps1 text eol=crlf
+
+# GitHub files
+.gitattributes text eol=lf
+.gitignore text eol=lf
+
+# Binary files
+*.vault binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+
+# Archives
+*.zip binary
+*.tar.gz binary
+*.7z binary
