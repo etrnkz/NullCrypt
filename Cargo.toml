@@ -18,7 +18,7 @@ repository = "https://github.com/etrnkz/secure-vault"
 # Cryptography (audited)
 aes-gcm = "0.10"
 argon2 = "0.5"
-rand = "0.8"
+rand = "0.10"
 zeroize = { version = "1.7", features = ["derive"] }
 subtle = "2.5"
 
