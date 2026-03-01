@@ -1,6 +1,6 @@
 ## Secure Vault - Encrypted Container for Removable Media
 
-[![CI](https://github.com/etrnkz/secure-vault/workflows/CI/badge.svg)](https://github.com/etrnkz/secure-vault/actions)
+[![CI](https://github.com/etrnkz/nullcrypt/workflows/CI/badge.svg)](https://github.com/etrnkz/secure-vault/actions)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE)
 [![Rust Version](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org)
 
