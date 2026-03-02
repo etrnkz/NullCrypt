@@ -1,18 +1,25 @@
 # cargo-deny configuration for security and license checks
+# Updated for modern cargo-deny versions (PR #611+)
 
 [advisories]
+# Advisory database configuration
 db-path = "~/.cargo/advisory-db"
 db-urls = ["https://github.com/rustsec/advisory-db"]
-vulnerability = "deny"
-unmaintained = "all"
+
+# Fail CI on:
 yanked = "deny"
-notice = "warn"
+unmaintained = "all"
+
+# Ignore specific advisories
 ignore = [
     "RUSTSEC-2021-0154", # fuser - optional dependency, not used yet
 ]
 
 [licenses]
+# Fail if a crate has no detectable license
 unlicensed = "deny"
+
+# Explicitly allowed licenses
 allow = [
     "MIT",
     "Apache-2.0",
@@ -20,6 +27,8 @@ allow = [
     "ISC",
     "Unicode-DFS-2016",
 ]
+
+# Explicitly denied licenses
 deny = [
     "GPL-2.0",
     "GPL-3.0",
@@ -27,9 +36,13 @@ deny = [
 ]
 
 [bans]
+# Warn if multiple versions of the same crate are present
 multiple-versions = "warn"
+
+# Allow wildcard dependencies (change to "deny" for stricter policy)
 wildcards = "allow"
 
 [sources]
+# Only allow crates.io and known git sources
 unknown-registry = "deny"
 unknown-git = "deny"
