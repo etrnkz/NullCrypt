@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Progress bars for pack and unpack operations
+- Visual feedback for large file operations with indicatif
+
 ### Changed
 - Replaced postcard with ciborium (CBOR) for serialization
 - Ciborium has no unmaintained dependencies
-
-### Added
-- Password change command (`change-password`)
-- Test coverage for password change functionality
 
 ## [0.1.0] - 2024-03-02
 

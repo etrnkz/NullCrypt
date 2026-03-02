@@ -1,5 +1,6 @@
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
+use indicatif::{ProgressBar, ProgressStyle};
 use std::fs;
 use std::path::PathBuf;
 use tracing::info;
@@ -86,6 +87,14 @@ fn main() -> Result<()> {
             let password = read_password("Enter vault password: ")?;
             let mut vault = Vault::open(&vault_path, password)?;
 
+            let pb = ProgressBar::new(files.len() as u64);
+            pb.set_style(
+                ProgressStyle::default_bar()
+                    .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos}/{len} {msg}")
+                    .unwrap()
+                    .progress_chars("#>-"),
+            );
+
             for file_path in files {
                 let filename = file_path
                     .file_name()
@@ -93,13 +102,16 @@ fn main() -> Result<()> {
                     .to_string_lossy()
                     .to_string();
 
+                pb.set_message(format!("Adding {}", filename));
+
                 let data = fs::read(&file_path)
                     .with_context(|| format!("Failed to read {:?}", file_path))?;
 
                 vault.add_file(filename.clone(), data);
-                println!("✓ Added: {}", filename);
+                pb.inc(1);
             }
 
+            pb.finish_with_message("Saving vault...");
             vault.save(&vault_path)?;
             println!("✓ Vault updated successfully");
         }
@@ -111,13 +123,24 @@ fn main() -> Result<()> {
 
             fs::create_dir_all(&output)?;
 
-            for file in vault.list_files() {
+            let files = vault.list_files();
+            let pb = ProgressBar::new(files.len() as u64);
+            pb.set_style(
+                ProgressStyle::default_bar()
+                    .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos}/{len} {msg}")
+                    .unwrap()
+                    .progress_chars("#>-"),
+            );
+
+            for file in files {
+                pb.set_message(format!("Extracting {}", file.name));
                 let out_path = output.join(&file.name);
                 fs::write(&out_path, &file.data)
                     .with_context(|| format!("Failed to write {:?}", out_path))?;
-                println!("✓ Extracted: {}", file.name);
+                pb.inc(1);
             }
 
+            pb.finish_with_message("Complete!");
             println!("✓ All files extracted to {:?}", output);
         }
 
