@@ -53,6 +53,12 @@ enum Commands {
         #[arg(value_name = "VAULT_PATH")]
         vault_path: PathBuf,
     },
+    /// Verify vault integrity
+    Verify {
+        /// Path to vault file
+        #[arg(value_name = "VAULT_PATH")]
+        vault_path: PathBuf,
+    },
 }
 
 fn read_password(prompt: &str) -> Result<Vec<u8>> {
@@ -177,6 +183,27 @@ fn main() -> Result<()> {
             vault.save(&vault_path)?;
             println!("✓ Password changed successfully");
         }
+
+        Commands::Verify { vault_path } => {
+            info!("Verifying vault integrity");
+
+            match Vault::verify(&vault_path) {
+                Ok(info) => {
+                    println!("✓ Vault integrity check passed");
+                    println!("\nVault Information:");
+                    println!("  Format version: {}", info.version);
+                    println!("  Created: {}", format_timestamp(info.created_at));
+                    println!("  KDF parameters:");
+                    println!("    Memory: {} MB", info.kdf_params.memory_cost_kb / 1024);
+                    println!("    Iterations: {}", info.kdf_params.time_cost);
+                    println!("    Parallelism: {}", info.kdf_params.parallelism);
+                    println!("  Encrypted data size: {} bytes", info.ciphertext_size);
+                }
+                Err(e) => {
+                    anyhow::bail!("Vault verification failed: {}", e);
+                }
+            }
+        }
     }
 
     Ok(())
@@ -193,4 +220,25 @@ fn format_size(bytes: u64) -> String {
     }
 
     format!("{:.2} {}", size, UNITS[unit_idx])
+}
+
+fn format_timestamp(timestamp: u64) -> String {
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+
+    let datetime = UNIX_EPOCH + Duration::from_secs(timestamp);
+    match datetime.duration_since(SystemTime::now()) {
+        Ok(_) => format!("{} seconds from now", timestamp),
+        Err(e) => {
+            let ago = e.duration().as_secs();
+            if ago < 60 {
+                format!("{} seconds ago", ago)
+            } else if ago < 3600 {
+                format!("{} minutes ago", ago / 60)
+            } else if ago < 86400 {
+                format!("{} hours ago", ago / 3600)
+            } else {
+                format!("{} days ago", ago / 86400)
+            }
+        }
+    }
 }

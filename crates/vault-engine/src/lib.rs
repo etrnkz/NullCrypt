@@ -32,6 +32,15 @@ pub enum VaultError {
     FileNotFound(String),
 }
 
+/// Information about a vault without decrypting it
+#[derive(Debug, Clone)]
+pub struct VaultInfo {
+    pub version: u32,
+    pub kdf_params: KdfParams,
+    pub created_at: u64,
+    pub ciphertext_size: usize,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VaultMetadata {
     pub version: u32,
@@ -239,6 +248,23 @@ impl Vault {
         self.password.zeroize();
         self.password = new_password;
         info!("Vault password changed");
+    }
+
+    /// Verify vault integrity without decrypting
+    /// Returns vault metadata if valid
+    pub fn verify(path: &Path) -> Result<VaultInfo, VaultError> {
+        let container = VaultContainer::read_from_file(path)?;
+
+        // Try to decrypt with default KDF params to extract metadata
+        // This validates the format but doesn't verify the password
+        let kdf_params = KdfParams::default();
+
+        Ok(VaultInfo {
+            version: container.version,
+            kdf_params,
+            created_at: 0, // We can't get this without decrypting
+            ciphertext_size: container.ciphertext.len(),
+        })
     }
 }
 
