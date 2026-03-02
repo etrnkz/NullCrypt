@@ -41,6 +41,18 @@ enum Commands {
         #[arg(short, long, value_name = "DIR")]
         output: PathBuf,
     },
+    /// Extract specific files from vault
+    Extract {
+        /// Path to vault file
+        #[arg(value_name = "VAULT_PATH")]
+        vault_path: PathBuf,
+        /// Files to extract
+        #[arg(value_name = "FILES")]
+        files: Vec<String>,
+        /// Output directory
+        #[arg(short, long, value_name = "DIR", default_value = ".")]
+        output: PathBuf,
+    },
     /// List vault contents
     List {
         /// Path to vault file
@@ -148,6 +160,59 @@ fn main() -> Result<()> {
 
             pb.finish_with_message("Complete!");
             println!("✓ All files extracted to {:?}", output);
+        }
+
+        Commands::Extract {
+            vault_path,
+            files,
+            output,
+        } => {
+            info!("Extracting specific files from vault");
+            let password = read_password("Enter vault password: ")?;
+            let vault = Vault::open(&vault_path, password)?;
+
+            fs::create_dir_all(&output)?;
+
+            let pb = ProgressBar::new(files.len() as u64);
+            pb.set_style(
+                ProgressStyle::default_bar()
+                    .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos}/{len} {msg}")
+                    .unwrap()
+                    .progress_chars("#>-"),
+            );
+
+            let mut extracted = 0;
+            let mut not_found = Vec::new();
+
+            for filename in &files {
+                pb.set_message(format!("Extracting {}", filename));
+
+                match vault.get_file(filename) {
+                    Ok(file) => {
+                        let out_path = output.join(&file.name);
+                        fs::write(&out_path, &file.data)
+                            .with_context(|| format!("Failed to write {:?}", out_path))?;
+                        extracted += 1;
+                    }
+                    Err(_) => {
+                        not_found.push(filename.clone());
+                    }
+                }
+                pb.inc(1);
+            }
+
+            pb.finish_with_message("Complete!");
+
+            if extracted > 0 {
+                println!("✓ Extracted {} file(s) to {:?}", extracted, output);
+            }
+
+            if !not_found.is_empty() {
+                println!("\n⚠ Files not found in vault:");
+                for filename in not_found {
+                    println!("  - {}", filename);
+                }
+            }
         }
 
         Commands::List { vault_path } => {

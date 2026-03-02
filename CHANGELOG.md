@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Visual feedback for large file operations with indicatif
 - Vault verification command to check integrity without decrypting
 - Display vault metadata (version, KDF params, size, creation time)
+- Extract command to retrieve specific files without unpacking all
 
 ### Changed
 - Replaced postcard with ciborium (CBOR) for serialization

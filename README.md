@@ -54,11 +54,17 @@ nullcrypt create /media/usb/my-vault.vault
 # Add files to vault
 nullcrypt pack /media/usb/my-vault.vault file1.txt file2.pdf
 
-# Extract files from vault
+# Extract all files from vault
 nullcrypt unpack /media/usb/my-vault.vault --output ./extracted/
+
+# Extract specific files from vault
+nullcrypt extract /media/usb/my-vault.vault file1.txt file2.pdf --output ./extracted/
 
 # List vault contents
 nullcrypt list /media/usb/my-vault.vault
+
+# Verify vault integrity
+nullcrypt verify /media/usb/my-vault.vault
 
 # Change vault password
 nullcrypt change-password /media/usb/my-vault.vault
