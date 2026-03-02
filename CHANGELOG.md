@@ -15,7 +15,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Password change command (`change-password`)
 - Test coverage for password change functionality
 
-## [0.1.0] - 2024
+## [0.1.0] - 2024-03-02
+
+### Added
+- Initial release of NullCrypt
+- AES-256-GCM authenticated encryption
+- Argon2id key derivation (64MB memory, 3 iterations)
+- Password-protected vault creation
+- Pack files into encrypted vaults
+- Unpack files from vaults
+- List vault contents
+- Password change command
+- Cross-platform support (Linux, macOS, Windows)
+- Memory zeroization for all secrets
+- Constant-time password verification
+- CLI interface with secure password prompts
+
+### Security
+- Uses audited cryptographic libraries (aes-gcm, argon2)
+- No plaintext ever written to disk
+- Automatic secret cleanup on drop
+- Side-channel attack mitigations
 
 ### Added
 - Initial release
